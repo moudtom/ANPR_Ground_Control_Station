@@ -1,1 +1,2 @@
 # ANPR_Ground_Control_Station_V2_1
+This is a repository for Automatic Number Plate Recognition and custom research codes at the Department of Mechanical Engineering at Navaminda Kasatriyadhiraj Royal Air Force Academy. The following setup has been tested on: windows 11, Qt 6.4.
