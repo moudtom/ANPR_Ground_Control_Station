@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     tmrTimer = new QTimer(this);
-    tmrTimer->start(30);
+    tmrTimer->start(33);
 
     // connect the signals and slots
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
@@ -30,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // load color list
     myColorList = load_colorlist();
+
+    // load blacklist
+    myBlacklist = load_backlist();
 
     // setup status bar
     mainStatusBar = statusBar();
@@ -80,16 +83,6 @@ void MainWindow::detectCarColor(cv::Mat inputImg)
     myDetectColor.findHistrogram(inputImg);
     myFrame.imgColor = myDetectColor.color_rgb;
     myCar.colorHSV = myDetectColor.color_HSV;
-
-    QImage frameColor(
-                myFrame.imgColor.data,
-                myFrame.imgColor.cols,
-                myFrame.imgColor.rows,
-                myFrame.imgColor.step,
-                QImage::Format_RGB888);
-    QPixmap imageColor = QPixmap::fromImage(frameColor);
-    ui->ShowImage_Color->setPixmap(imageColor);
-
     int _vh = (int)myCar.colorHSV.val[0];
     int _vs = (int)myCar.colorHSV.val[1];
     int _vv = (int)myCar.colorHSV.val[2];
@@ -102,7 +95,7 @@ void MainWindow::detectCarColor(cv::Mat inputImg)
                 _vv > myColorList[i].val_min && _vv < myColorList[i].val_max)
         {
             myCar.str_color = myColorList[i].name;
-            qDebug()<<"myCar.str_color.c_str()";
+            //qDebug()<<"myCar.str_color.c_str()";
             break;
         }
     }
@@ -116,10 +109,6 @@ bool MainWindow::detectCarPlate(cv::Mat &inputImg)
 
     if (find_large_contour1(inputImg, outPoint))
     {
-        /*for (int i = 0; i < outPoint.size(); i++) {
-                circle(inputImg, outPoint[i], 2, cv::Scalar(255, 0, 0), 2);
-            }*/
-        //qDebug()<<"find contour";
         cv::Point2f srcPoints[] = {
             outPoint[0],
             outPoint[1],
@@ -250,7 +239,7 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 std::vector<MainWindow::ananColor> MainWindow::load_colorlist()
 {
     std::vector<ananColor> _tempV_color;
-        std::ifstream myfile("C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/color_data.csv");
+        std::ifstream myfile(loadColorListDirectory);
 
         if (myfile.is_open())
         {
@@ -299,6 +288,45 @@ std::vector<MainWindow::ananColor> MainWindow::load_colorlist()
         return _tempV_color;
 }
 
+std::vector<MainWindow::Car> MainWindow::load_backlist()
+{
+    std::vector<Car> _tempV_car;
+        std::ifstream myfile(loadCarBlackListDirectory);
+
+        if (myfile.is_open())
+        {
+            int idx1 = 0;
+            int idx2 = 0;
+
+            Car _t_car;
+            std::string line;
+
+            while (std::getline(myfile, line))
+            {
+                idx1 = 0;
+
+                idx2 = line.find(",", idx1);
+                _t_car.str_brand = line.substr(idx1, idx2 - idx1);
+                idx1 = idx2 + 1;
+
+                idx2 = line.find(",", idx1);
+                _t_car.str_color = line.substr(idx1, idx2 - idx1);
+                idx1 = idx2 + 1;
+
+                idx2 = line.find(",", idx1);
+                _t_car.str_plat1 = line.substr(idx1, idx2 - idx1);
+                idx1 = idx2 + 1;
+
+                idx2 = line.find(",", idx1);
+                _t_car.str_plat2 = line.substr(idx1, idx2 - idx1);
+
+                _tempV_car.push_back(_t_car);
+            }
+            myfile.close();
+        }
+        return _tempV_car;
+}
+
 void MainWindow::RunGui()
 {
     cv::Rect roi_color_detect(cv::Point(250,100),cv::Point(370,170));
@@ -320,7 +348,7 @@ void MainWindow::RunGui()
             cv::Scalar color(60, 160, 260);
             //cv::rectangle(temp, cv::Rect(_tembBox.x, _tembBox.y, _tembBox.w, _tembBox.h), color, 3);
 
-            if (_tembBox.obj_id == 0) //0 person, 1 bicycle, 2 car, 3 motorbike
+            if (_tembBox.obj_id == 0) //0 plate number
             {
 
                 //qDebug()<< _tembBox.obj_id;
@@ -381,6 +409,24 @@ void MainWindow::RunGui()
                         QStringList items2 = plateNumber.split("\n\n");
                         for(const QString& item: items2) {
                             ui->PlateNumber_Province->setText(item);
+                        }
+
+                        car_BlackList_index = -1;
+                        for (int i = 0; i < myBlacklist.size(); i++) {
+                            if (myCar.str_plat1 == myBlacklist[i].str_plat1)
+                            {
+                                cv::String _tempStr("Black List");
+                                cv::putText(
+                                            myFrame.imgCar,
+                                            _tempStr,
+                                            cv::Point(50, 200),
+                                            1,
+                                            3,
+                                            cv::Scalar(0, 0, 255),
+                                            2);
+                                car_BlackList_index = i;
+                                qDebug()<<car_BlackList_index;
+                            }
                         }
 
                     }

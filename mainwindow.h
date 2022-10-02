@@ -120,6 +120,7 @@ public:
 
             color_HSV = cv::Scalar(maxLoc[0].y, maxLoc[1].y, maxLoc[2].y);
             color_rgb = hsv2bgrCvt(cv::Scalar(maxLoc[0].y, maxLoc[1].y, maxLoc[2].y));
+            //qDebug()<<color_rgb.val;
             hsv_hist = _temp_hist;
 
         }
@@ -198,6 +199,8 @@ public:
     int myThroshold_value1 = 180;
     int myThroshold_value2 = 180;
     std::vector<ananColor> myColorList;
+    std::vector<Car> myBlacklist;
+    int car_BlackList_index = -1;
     int iSelectCar = 0;
     int iSelectColor = 0;
 public slots:
@@ -217,5 +220,6 @@ private:
     //VideoCapture    cap;
     cv::Mat        temp;
     std::vector<ananColor> load_colorlist();
+    std::vector<Car> load_backlist();
 };
 #endif // MAINWINDOW_H
