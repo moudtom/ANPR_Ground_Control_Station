@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>558</height>
+    <width>1200</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,13 +30,280 @@
      <string/>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>50</y>
+      <width>241</width>
+      <height>252</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>TH SarabunPSK</family>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 0, 127);</string>
+       </property>
+       <property name="text">
+        <string>เลขทะเบียน</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="PlateNumber">
+       <property name="font">
+        <font>
+         <family>TH SarabunPSK</family>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>N/A</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <family>TH SarabunPSK</family>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 0, 127);</string>
+       </property>
+       <property name="text">
+        <string>จังหวัด</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="PlateNumber_Province">
+       <property name="font">
+        <font>
+         <family>TH SarabunPSK</family>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>N/A</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <family>TH SarabunPSK</family>
+           <pointsize>16</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 127);</string>
+         </property>
+         <property name="text">
+          <string>สีรถ</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Color">
+         <property name="font">
+          <font>
+           <family>TH SarabunPSK</family>
+           <pointsize>16</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>N/A</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="ShowImage_Plate">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>50</y>
+      <width>241</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ShowImage_Plate_2">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>210</y>
+      <width>241</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>350</y>
+      <width>241</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Car Color </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>20</y>
+      <width>241</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>capture plate</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ShowImage_Color">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>380</y>
+      <width>241</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>180</y>
+      <width>241</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string> image processing</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>1200</width>
      <height>25</height>
     </rect>
    </property>

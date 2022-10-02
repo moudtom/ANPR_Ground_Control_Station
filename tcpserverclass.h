@@ -41,6 +41,7 @@ public:
     std::string ip_address;
     bool bConnect = false;
 
+
     struct moudtomframe
     {
         cv::Mat imgALL_M, imgCar_M, imgPlate_M, imgColor_M;
