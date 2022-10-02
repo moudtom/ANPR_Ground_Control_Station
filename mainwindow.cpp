@@ -239,92 +239,92 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 std::vector<MainWindow::ananColor> MainWindow::load_colorlist()
 {
     std::vector<ananColor> _tempV_color;
-        std::ifstream myfile(loadColorListDirectory);
+    std::ifstream myfile(loadColorListDirectory);
 
-        if (myfile.is_open())
+    if (myfile.is_open())
+    {
+        int idx1 = 0;
+        int idx2 = 0;
+
+        ananColor _t_color;
+        std::string line;
+
+        while (std::getline(myfile, line))
         {
-            int idx1 = 0;
-            int idx2 = 0;
+            idx1 = 0;
 
-            ananColor _t_color;
-            std::string line;
+            idx2 = line.find(",", idx1);
+            _t_color.name = line.substr(idx1, idx2 - idx1);
+            idx1 = idx2 + 1;
 
-            while (std::getline(myfile, line))
-            {
-                idx1 = 0;
+            idx2 = line.find(",", idx1);
+            _t_color.hue_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.name = line.substr(idx1, idx2 - idx1);
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_color.hue_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.hue_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_color.sat_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.hue_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_color.sat_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.sat_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_color.val_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.sat_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_color.val_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_color.val_min = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
-
-                idx2 = line.find(",", idx1);
-                _t_color.val_max = std::atoi(line.substr(idx1, idx2 - idx1).c_str());
-                idx1 = idx2 + 1;
-
-                _tempV_color.push_back(_t_color);
-            }
-            myfile.close();
+            _tempV_color.push_back(_t_color);
         }
-        return _tempV_color;
+        myfile.close();
+    }
+    return _tempV_color;
 }
 
 std::vector<MainWindow::Car> MainWindow::load_backlist()
 {
     std::vector<Car> _tempV_car;
-        std::ifstream myfile(loadCarBlackListDirectory);
+    std::ifstream myfile(loadCarBlackListDirectory);
 
-        if (myfile.is_open())
+    if (myfile.is_open())
+    {
+        int idx1 = 0;
+        int idx2 = 0;
+
+        Car _t_car;
+        std::string line;
+
+        while (std::getline(myfile, line))
         {
-            int idx1 = 0;
-            int idx2 = 0;
+            idx1 = 0;
 
-            Car _t_car;
-            std::string line;
+            idx2 = line.find(",", idx1);
+            _t_car.str_brand = line.substr(idx1, idx2 - idx1);
+            idx1 = idx2 + 1;
 
-            while (std::getline(myfile, line))
-            {
-                idx1 = 0;
+            idx2 = line.find(",", idx1);
+            _t_car.str_color = line.substr(idx1, idx2 - idx1);
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_car.str_brand = line.substr(idx1, idx2 - idx1);
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_car.str_plat1 = line.substr(idx1, idx2 - idx1);
+            idx1 = idx2 + 1;
 
-                idx2 = line.find(",", idx1);
-                _t_car.str_color = line.substr(idx1, idx2 - idx1);
-                idx1 = idx2 + 1;
+            idx2 = line.find(",", idx1);
+            _t_car.str_plat2 = line.substr(idx1, idx2 - idx1);
 
-                idx2 = line.find(",", idx1);
-                _t_car.str_plat1 = line.substr(idx1, idx2 - idx1);
-                idx1 = idx2 + 1;
-
-                idx2 = line.find(",", idx1);
-                _t_car.str_plat2 = line.substr(idx1, idx2 - idx1);
-
-                _tempV_car.push_back(_t_car);
-            }
-            myfile.close();
+            _tempV_car.push_back(_t_car);
         }
-        return _tempV_car;
+        myfile.close();
+    }
+    return _tempV_car;
 }
 
 void MainWindow::RunGui()
@@ -393,24 +393,10 @@ void MainWindow::RunGui()
                                     3,
                                     myFrame.imgPlate.step);
                         std::string tText = std::string(TBapi->GetUTF8Text());
-                        std::string tText2[2] = { "","" };
                         myCar.str_plat1 = tText;
                         //qDebug()<<myCar.str_plat1.c_str();
 
-                        // Display Plate Number
-                        QString plateNumber = QString("%1").arg(myCar.str_plat1.c_str());
-                        //qDebug()<<record;
-                        QStringList items = plateNumber.split("\n");
-                        ui->PlateNumber->setText(items.at(0));
-                        //ui->PlateNumber->setText(myCar.str_plat1.c_str());
-
-                        // Display Province
-                        QString province = QString("%1").arg(myCar.str_plat1.c_str());
-                        QStringList items2 = plateNumber.split("\n\n");
-                        for(const QString& item: items2) {
-                            ui->PlateNumber_Province->setText(item);
-                        }
-
+                        //Black list
                         car_BlackList_index = -1;
                         for (int i = 0; i < myBlacklist.size(); i++) {
                             if (myCar.str_plat1 == myBlacklist[i].str_plat1)
@@ -425,7 +411,6 @@ void MainWindow::RunGui()
                                             cv::Scalar(0, 0, 255),
                                             2);
                                 car_BlackList_index = i;
-                                qDebug()<<car_BlackList_index;
                             }
                         }
 
@@ -434,6 +419,22 @@ void MainWindow::RunGui()
 
             }
         }
+
+        // Display Plate Number
+        QString plateNumber = QString("%1").arg(myCar.str_plat1.c_str());
+        //qDebug()<<record;
+        QStringList items = plateNumber.split("\n");
+        ui->PlateNumber->setText(items.at(0));
+        //ui->PlateNumber->setText(myCar.str_plat1.c_str());
+
+
+        // Display Province
+        QString province = QString("%1").arg(myCar.str_plat1.c_str());
+        QStringList items2 = plateNumber.split("\n\n");
+        for(const QString& item: items2) {
+            ui->PlateNumber_Province->setText(item);
+        }
+
         cvtColor(temp, temp, cv::COLOR_BGR2RGB);
         QImage frame(
                     temp.data,
@@ -446,6 +447,8 @@ void MainWindow::RunGui()
 
     }
     //qDebug()<< " stop";
+    myCar.isDetect = false;
     _server54000.myFrame.mbYolo = false;
+
 
 }

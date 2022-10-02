@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1251</width>
     <height>566</height>
    </rect>
   </property>
@@ -26,6 +26,9 @@
     <property name="frameShape">
      <enum>QFrame::Box</enum>
     </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -33,13 +36,20 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>950</x>
+      <x>980</x>
       <y>50</y>
       <width>241</width>
       <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="Line" name="line_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QLabel" name="label_2">
        <property name="font">
@@ -269,13 +279,48 @@
      <string> image processing</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>10</y>
+      <width>281</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>TH SarabunPSK</family>
+      <pointsize>16</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(0, 0, 0,20);
+border-radius: 15px; 
+color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="title">
+     <string>ผลการตรวจพบ</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>groupBox</zorder>
+   <zorder>ShowImage</zorder>
+   <zorder>verticalLayoutWidget</zorder>
+   <zorder>ShowImage_Plate</zorder>
+   <zorder>ShowImage_Plate_2</zorder>
+   <zorder>label_5</zorder>
+   <zorder>label_6</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>1251</width>
      <height>25</height>
     </rect>
    </property>
