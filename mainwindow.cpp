@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
     connect(ui->actionOpen, SIGNAL(triggered(bool)), this, SLOT(openCamera()));
 
-    //tcp ip
+    //tcp  ip
     _server54000.myFrame.mbYolo = false;
     //_yolothread.myFrameYolo.bYolo=false;
 
@@ -127,6 +127,11 @@ bool MainWindow::detectCarPlate(cv::Mat &inputImg)
         cv::Mat myMatrix = cv::getPerspectiveTransform(srcPoints, dstPoints);
         cv::warpPerspective(inputImg, tempImg, myMatrix, myFrame.imgPlate.size());
 
+         cv::Mat element = getStructuringElement(cv::MORPH_RECT, cv::Size(1, 1));
+         morphologyEx(tempImg, tempImg, CV_MOP_CLOSE, element);
+
+
+
         QImage framePlate2(
                     tempImg.data,
                     tempImg.cols,
@@ -137,8 +142,10 @@ bool MainWindow::detectCarPlate(cv::Mat &inputImg)
         ui->ShowImage_Plate_2->setPixmap(imagePlate2);
 
 
-        //if(tempImg.rows > 90 && tempImg.cols > 180)
-        tempImg.copyTo(myFrame.imgPlate);
+
+         //if(tempImg.rows > 85 && tempImg.cols > 180){
+            tempImg.copyTo(myFrame.imgPlate);
+        //}
 
 
         //if(tempImg.rows > 100 && tempImg.cols > 226)
@@ -386,6 +393,8 @@ void MainWindow::RunGui()
                     {
                         myCar.isDetect = true;
                         //qDebug()<< " detectCarPlateXXX";
+
+
                         TBapi->SetImage(
                                     myFrame.imgPlate.data,
                                     myFrame.imgPlate.cols,
@@ -394,6 +403,7 @@ void MainWindow::RunGui()
                                     myFrame.imgPlate.step);
                         std::string tText = std::string(TBapi->GetUTF8Text());
                         myCar.str_plat1 = tText;
+
                         //qDebug()<<myCar.str_plat1.c_str();
 
                         //Black list
@@ -449,6 +459,7 @@ void MainWindow::RunGui()
     //qDebug()<< " stop";
     myCar.isDetect = false;
     _server54000.myFrame.mbYolo = false;
+    capturePlate = false;
 
 
 }

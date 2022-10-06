@@ -195,6 +195,7 @@ public:
     };
 
     bool bYoloThread = false;
+    bool capturePlate = false;
     cv::Mat  frameSend;
     int myThroshold_value1 = 180;
     int myThroshold_value2 = 180;

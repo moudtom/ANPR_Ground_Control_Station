@@ -17,7 +17,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS network)
 
-FIND_PACKAGE(Threads REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -86,7 +85,10 @@ include_directories(C:/vcpkg/installed/x64-windows/include/leptonica)
 target_link_libraries(ANPR_Ground_Control_Station_V2_1  PRIVATE C:/vcpkg/installed/x64-windows/lib/tesseract41.lib)
 
 
-
+install(TARGETS ANPR_Ground_Control_Station_V2_1 DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+#required Qt libraries
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt)
+add_custom_command(TARGET ANPR_Ground_Control_Station_V2_1 POST_BUILD COMMAND "${WINDEPLOYQT_EXECUTABLE}" --dir "${CMAKE_SOURCE_DIR}/bin"  "$<TARGET_FILE:ANPR_Ground_Control_Station_V2_1>" )
 
 
 
