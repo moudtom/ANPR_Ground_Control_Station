@@ -3,13 +3,14 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QTime>
+#include <QTextEdit>
 #include <fstream>
 #include <vector>
 #include<iostream>
 #include <tcpserverclass.h>
 #include <allheaders.h> // leptonica main header for image io
 #include <tesseract/baseapi.h> // tesseract main header
-
+#include "opencv2/dnn.hpp"
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui_c.h>
@@ -32,14 +33,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void takePhoto() {taking_photo = true; }
 
     tcpServerClass _server54000;
     std::string names_file = "C:/darknet-master/data/obj.names";
     std::string cfg_file = "C:/darknet-master/cfg/yolo-obj.cfg";
-    std::string weights_file = "C:/darknet-master/yolo-obj_plate.weights";
-    std::string saveDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/save.csv";
+    std::string weights_file = "C:/darknet-master/yolo-obj-plate_final.weights";
+    std::string saveDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/save history";
     std::string loadCarBlackListDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/blacklist_data.csv";
     std::string loadColorListDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/color_data.csv";
+
     std::vector<bbox_t> result_vect;
     vector<string> objects_names_from_file(string const filename);
     vector<string> obj_names ;
@@ -63,6 +66,7 @@ public:
         std::string str_color;
         std::string str_plat1;
         std::string str_plat2;
+        std::string str_plat3;
         std::string str_date;
         std::string str_time;
         cv::Scalar colorRGB;
@@ -76,6 +80,7 @@ public:
             str_color = "";
             str_plat1 = "";
             str_plat2 = "";
+            str_plat3 = "";
             str_date = "";
             str_time = "";
             Px = 0;
@@ -204,13 +209,25 @@ public:
     int car_BlackList_index = -1;
     int iSelectCar = 0;
     int iSelectColor = 0;
+
+
+signals:
+    void frameCaptured(cv::Mat *data);
+    void photoTaken(QString name);
 public slots:
     void RunGui();
     void openCamera();
     void detectCarColor(cv::Mat inputImg);
     bool detectCarPlate(cv::Mat &inputImg);
+    void saveCarData(Car _t_car);
     bool find_large_contour1(cv::Mat &src, std::vector<cv::Point> &output);
+    cv::Mat detectTextAreas(QImage &image, std::vector<cv::Rect>&);
 
+    void decode(const cv::Mat& scores, const cv::Mat& geometry, float scoreThresh,
+        std::vector<cv::RotatedRect>& detections, std::vector<float>& confidences);
+private slots:
+    void appendSavedPhoto(QString name);
+    void takePhoto(cv::Mat &frame);
 private:
     Ui::MainWindow *ui;
     QTimer         *tmrTimer; // timer
@@ -222,5 +239,22 @@ private:
     cv::Mat        temp;
     std::vector<ananColor> load_colorlist();
     std::vector<Car> load_backlist();
+    cv::dnn::Net net;
+
+    vector<string> classes;
+        float confThreshold = 0.6;
+        float nmsThreshold = 0.5;
+          int inputWidth = 160;
+          int inputHeight = 160;
+    // take photos
+    bool taking_photo;
+    bool Auto_taking_photo;
+    int CountTime=0;
+    int CountNum=0;
+
+    // text editor
+    QTextEdit *editor;
+
+    QString outputText;
 };
 #endif // MAINWINDOW_H

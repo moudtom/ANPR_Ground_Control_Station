@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>115139.png</file>
+        <file>Griffin.png</file>
+        <file>M solar X star.png</file>
+        <file>RTAF.png</file>
+    </qresource>
+</RCC>

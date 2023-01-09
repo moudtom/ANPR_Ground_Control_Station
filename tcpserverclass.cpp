@@ -16,10 +16,7 @@ tcpServerClass::tcpServerClass()
     datasFromClient = "";
     clientCount = 0;
     bShowImage = false;
-
-
 }
-
 
 void tcpServerClass::setPort(int _port,int _buflen)
 {
@@ -42,8 +39,10 @@ cv::Mat tcpServerClass::getImage(){
 
 void tcpServerClass::run(){
 
-    cv::Rect roi_color_detectx(cv::Point(250,100),cv::Point(370,170));
-    cv::Rect roi_plate_detectx(cv::Point(100, 250),cv::Point(450, 450));
+//    cv::Rect roi_color_detectx(cv::Point(200,190),cv::Point(300,220));
+//    cv::Rect roi_plate_detectx(cv::Point(60, 230),cv::Point(350, 450));
+        cv::Rect roi_color_detectx(cv::Point(250,100),cv::Point(370,170));
+        cv::Rect roi_plate_detectx(cv::Point(100, 180),cv::Point(450, 450));
     WORD version;
     WSADATA wsaData;
     version = MAKEWORD(2, 2);
@@ -94,16 +93,19 @@ void tcpServerClass::run(){
         _img = cv::Scalar(0, 0, 0);
         send(theSocket, "a", 1, 0);
         Sleep(20);
+        int bytes = recv(theSocket, (char*)imgBuff, imgSize, MSG_WAITALL); //flag MSG_WAITALL  - do not complete until packet is completely filled */
 
-        if (recv(theSocket, (char*)imgBuff, imgSize, 0) != SOCKET_ERROR)
+        if (bytes != SOCKET_ERROR)
         {
             send(theSocket, "a", 1, 0);
 
 
             if(!myFrame.mbYolo){
                 myMtx.lock();
-                cv::rectangle(_img, roi_color_detectx, cv::Scalar(255, 0, 0), 1);
-                cv::rectangle(_img, roi_plate_detectx, cv::Scalar(0, 255, 0), 1);
+//                cv::rectangle(_img, roi_color_detectx, cv::Scalar(255, 0, 0), 1);
+//                cv::rectangle(_img, roi_plate_detectx, cv::Scalar(0, 255, 0), 1);
+                //cv::rectangle(_img, cv::Rect(0,30,150,50),cv::Scalar::all(0),-1);
+                //cv::putText(_img, std::to_string(bytes) + "/" + std::to_string((imgSize)), cv::Point(10,50),1,1,cv::Scalar(255,255,255),1);
                 _img.copyTo(outputImage);
                 myFrame.mbYolo = true;
                 myMtx.unlock();

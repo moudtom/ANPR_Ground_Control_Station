@@ -17,6 +17,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS network)
 
+#find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
+
 
 set(PROJECT_SOURCES
         main.cpp
@@ -25,6 +28,9 @@ set(PROJECT_SOURCES
         mainwindow.ui
         tcpserverclass.cpp
         tcpserverclass.h
+        Utilities.h
+        Utilities.cpp
+        resource.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -51,7 +57,8 @@ else()
 endif()
 
 target_link_libraries(ANPR_Ground_Control_Station_V2_1 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
+#target_link_libraries(ANPR_Ground_Control_Station_V2_1 PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(ANPR_Ground_Control_Station_V2_1 PRIVATE Qt${QT_VERSION_MAJOR}::Core5Compat)
 set_target_properties(ANPR_Ground_Control_Station_V2_1 PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -76,6 +83,10 @@ target_link_libraries(ANPR_Ground_Control_Station_V2_1  PRIVATE C:/opencv/instal
 include_directories(C:/darknet-master/src)
 include_directories(C:/darknet-master/include)
 target_link_libraries(ANPR_Ground_Control_Station_V2_1  PRIVATE C:/darknet-master/darknet.lib)
+
+#include_directories(C:/Darknet/src)
+#include_directories(C:/Darknet/include)
+#target_link_libraries(ANPR_Ground_Control_Station_V2_1  PRIVATE C:/Darknet/darknet.lib)
 
 
 ##tessaract
