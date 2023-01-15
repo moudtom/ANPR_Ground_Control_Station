@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui_c.h>
+#include "configurationdialog.h"
 
 #define OPENCV
 
@@ -204,6 +205,7 @@ public:
     cv::Mat  frameSend;
     int myThroshold_value1 = 180;
     int myThroshold_value2 = 180;
+    double alpha = 2.5;
     std::vector<ananColor> myColorList;
     std::vector<Car> myBlacklist;
     int car_BlackList_index = -1;
@@ -228,6 +230,7 @@ public slots:
 private slots:
     void appendSavedPhoto(QString name);
     void takePhoto(cv::Mat &frame);
+    void data_config();
 private:
     Ui::MainWindow *ui;
     QTimer         *tmrTimer; // timer
@@ -254,7 +257,11 @@ private:
 
     // text editor
     QTextEdit *editor;
-
     QString outputText;
+    // palte size
+    int plate_w  = 250 ;
+    int plate_h  = 100 ;
+
+
 };
 #endif // MAINWINDOW_H

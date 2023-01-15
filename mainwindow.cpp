@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     tmrTimer = new QTimer(this);
     tmrTimer->start(33);
+    // data configuration
+    connect(ui->actionconfiguration, SIGNAL(triggered(bool)),this, SLOT(data_config()));
 
     // connect the signals and slots
     connect(ui->actionExit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()));
@@ -141,7 +143,7 @@ bool MainWindow::detectCarPlate(cv::Mat &inputImg)
             outPoint[3],
         };
 
-        cv::SizeOfPlate(250,100);
+        cv::Size sizeOfPlate(plate_w,plate_h);
         cv::Mat temp_output(sizeOfPlate, CV_8UC3, cv::Scalar(0, 0, 0));
         
         cv::Point2f dstPoints[] = {
@@ -223,7 +225,7 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
     //qDebug() << "start find_large_contour1";
 
     cv::Mat gray, output_canny;
-    double alpha = 2.5; /*< Simple contrast control */
+    //double alpha = 2.5; /*< Simple contrast control */
     int beta = -200;       /*< Simple brightness control */
     src.convertTo(src, -1, alpha, beta);
 
@@ -464,6 +466,20 @@ void MainWindow::takePhoto(cv::Mat &frame)
     emit photoTaken(photo_name);
     taking_photo = false;
     Auto_taking_photo =false;
+}
+
+void MainWindow::data_config()
+{
+    qDebug()<<"hello";
+    ConfigurationDialog dialog(this);
+    if(dialog.exec() == QDialog::Rejected) {
+     return; // do nothing if dialog rejected
+    }
+    plate_w = dialog.plateWidth().toInt();
+    plate_h = dialog.plateHeight().toInt();
+    myThroshold_value1 =dialog.plateThreshold().toInt();
+    alpha = dialog.plateContrast().toDouble();
+
 }
 
 std::vector<MainWindow::ananColor> MainWindow::load_colorlist()

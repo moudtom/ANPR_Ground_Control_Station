@@ -31,6 +31,9 @@ set(PROJECT_SOURCES
         Utilities.h
         Utilities.cpp
         resource.qrc
+        configurationdialog.h
+        configurationdialog.cpp
+        configurationdialog.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

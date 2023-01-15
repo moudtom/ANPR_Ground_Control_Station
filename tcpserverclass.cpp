@@ -102,8 +102,8 @@ void tcpServerClass::run(){
 
             if(!myFrame.mbYolo){
                 myMtx.lock();
-//                cv::rectangle(_img, roi_color_detectx, cv::Scalar(255, 0, 0), 1);
-//                cv::rectangle(_img, roi_plate_detectx, cv::Scalar(0, 255, 0), 1);
+                cv::rectangle(_img, roi_color_detectx, cv::Scalar(255, 0, 0), 1);
+                cv::rectangle(_img, roi_plate_detectx, cv::Scalar(0, 255, 0), 1);
                 //cv::rectangle(_img, cv::Rect(0,30,150,50),cv::Scalar::all(0),-1);
                 //cv::putText(_img, std::to_string(bytes) + "/" + std::to_string((imgSize)), cv::Point(10,50),1,1,cv::Scalar(255,255,255),1);
                 _img.copyTo(outputImage);
