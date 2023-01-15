@@ -141,36 +141,30 @@ bool MainWindow::detectCarPlate(cv::Mat &inputImg)
             outPoint[3],
         };
 
-        //        cv::Point2f dstPoints[] = {
-        //            cv::Point(0,0),
-        //            cv::Point(180, 0),
-        //            cv::Point(180, 85),
-        //            cv::Point(0, 85),
-        //        };
+        cv::SizeOfPlate(250,100);
+        cv::Mat temp_output(sizeOfPlate, CV_8UC3, cv::Scalar(0, 0, 0));
+        
         cv::Point2f dstPoints[] = {
-            cv::Point(0,0),
-            cv::Point(192, 0),
-            cv::Point(192, 85),
-            cv::Point(0, 85),
-        };
+			cv::Point(0,0),
+			cv::Point(temp_output.cols, 0),
+			cv::Point(temp_output.cols, temp_output.rows),
+			cv::Point(0, temp_output.rows),
+		};
 
-        cv::Mat tempImg, tempImg_TS, tempImgGray;
         cv::Mat myMatrix = cv::getPerspectiveTransform(srcPoints, dstPoints);
-        //cv::warpPerspective(inputImg, tempImg, myMatrix, myFrame.imgPlate.size());
-        cv::warpPerspective(inputImg, tempImg, myMatrix, cv::Size(195,90));
-        //                cv::Mat element = getStructuringElement(cv::MORPH_RECT, cv::Size(1, 1));
-        //                morphologyEx(tempImg, tempImg, CV_MOP_CLOSE, element);
+        cv::warpPerspective(inputImg, temp_output, myMatrix, temp_output.size());
+
         QImage framePlate2(
-                    tempImg.data,
-                    tempImg.cols,
-                    tempImg.rows,
-                    tempImg.step,
+                    temp_output.data,
+                    temp_output.cols,
+                    temp_output.rows,
+                    temp_output.step,
                     QImage::Format_RGB888);
         QPixmap imagePlate2 = QPixmap::fromImage(framePlate2);
         //ui->ShowImage_Plate_2->setPixmap(imagePlate2);
 
         //if(tempImg.rows > 85 && tempImg.cols > 180){
-        tempImg.copyTo(myFrame.imgPlate);
+        temp_output.copyTo(myFrame.imgPlate);
         //}
         //if(tempImg.rows > 100 && tempImg.cols > 226)
         //tempImg (cv::Rect(0, 0, 226, 100)).copyTo(myFrame.imgPlate);
