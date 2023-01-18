@@ -670,13 +670,13 @@ void MainWindow::RunGui()
             bbox_t _tembBox = result_vec[k];
             cv::Scalar color(0, 255, 255);
 
-                        cv::rectangle(temp, cv::Rect(_tembBox.x-5, _tembBox.y-10, _tembBox.w+20, _tembBox.h+10), color, 1);
-                        putText(temp,
-                                obj_names[_tembBox.obj_id],
-                                cv::Point2f(_tembBox.x + 5, _tembBox.y - 5),
-                                cv::FONT_HERSHEY_COMPLEX_SMALL,
-                                0.6,
-                                color);
+//                        cv::rectangle(temp, cv::Rect(_tembBox.x-5, _tembBox.y-10, _tembBox.w+20, _tembBox.h+10), color, 1);
+//                        putText(temp,
+//                                obj_names[_tembBox.obj_id],
+//                                cv::Point2f(_tembBox.x + 5, _tembBox.y - 5),
+//                                cv::FONT_HERSHEY_COMPLEX_SMALL,
+//                                0.6,
+//                                color);
 
             if (_tembBox.obj_id == 0) //0 plate number
             {
