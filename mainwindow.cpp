@@ -232,32 +232,103 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
     //qDebug()<<"1";
     cv::cvtColor(src, gray, cv::COLOR_RGB2GRAY);
     cv::threshold(gray, gray, myThroshold_value1, 255, cv::THRESH_BINARY);
-    cv::cvtColor(gray, gray, cv::COLOR_GRAY2RGB);
-
-    int Canny_Throshold = 180;
+	
+ 	cv::Mat im_floodfill = gray.clone();
+	cv::floodFill(im_floodfill, cv::Point(0, 0), cv::Scalar(255));
+	cv::floodFill(im_floodfill, cv::Point(gray.cols - 1, gray.rows - 1), cv::Scalar(255));
+	//cv::imshow("im_floodfill", im_floodfill);
+	// Invert floodfilled image
+	cv::Mat im_floodfill_inv;
+	cv::bitwise_not(im_floodfill, im_floodfill_inv);
+	// Combine the two images to get the foreground.
+	cv::Mat im_out =  (gray | im_floodfill_inv);
+	
+	
+    cv::cvtColor(im_out, gray, cv::COLOR_GRAY2RGB);
+	
+    int Canny_Throshold = 100;
     cv::Canny(gray, output_canny, Canny_Throshold, Canny_Throshold *3, 3, false);
+	
+	
     // find contours
     std::vector<std::vector<cv::Point> > contours;
     int max_area = 0;
     std::vector<cv::Point> large_contour;
-    std::vector<cv::Point> convex_hull;
-    cv::findContours(output_canny, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
+	
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(output_canny, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_TC89_L1);
+
+    //cv::findContours(output_canny, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
     if (contours.size() == 0) return false;
 
     // find max area contours
+	int largest_index = 0;
     for (unsigned int i = 0; i < contours.size(); ++i) {
         int area = (int)cv::contourArea(contours[i]);
         if (area > max_area) {
             large_contour = contours[i];
             max_area = area;
+		largest_index = i;
         }
     }
     if (max_area == 0) return false;
 
     // simplify large contours
     cv::approxPolyDP(cv::Mat(large_contour), large_contour, 5, true);
-    //cv::Mat tempShow = src.clone();
+    
+	cv::Mat tempContours(output_canny.size(),CV_8UC1,cv::Scalar(0) );
+	cv::drawContours(tempContours, contours, (int)largest_index, cv::Scalar(255, 255, 0), 2, cv::LINE_8, hierarchy, 0);
+
+	// Create a vector to store lines of the image
+	std::vector<Vec4i> lines;
+	// Apply Hough Transform
+	HoughLinesP(tempContours, lines, 1, CV_PI / 180, 150, 50, 10);
+	// Draw lines on the image
+	cv::Mat tempLine(src.size(), CV_8UC1, cv::Scalar(0));
+	std::cout << "line found " << lines.size() << std::endl;
+
+	if (lines.size() < 2) return false;
+
+	std::vector<cv::Point> vP;
+	for (size_t i = 0; i < lines.size(); i++) {
+		Vec4i l = lines[i];
+		//line(tempShow, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 255), 1);
+		vP.push_back(Point(lines[i][0], lines[i][1]));
+		vP.push_back(Point(lines[i][2], lines[i][3]));
+	}
+
+	for (int i = 0; i < vP.size()-2; i++) {
+		line(tempLine, vP[i], vP[i+1], Scalar(255, 0, 255), 1);
+	}
+
+	line(tempLine, vP.front(), vP.back(), Scalar(255, 0, 255), 1);
+	
+	contours.clear();
+	hierarchy.clear();
+	cv::findContours(tempLine, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+	
+	if (contours.size() == 0) return false;
+
+	largest_index = 0;
+	max_area = 0;
+
+	// find max area contours
+	for (unsigned int i = 0; i < contours.size(); ++i) {
+		int area = (int)cv::contourArea(contours[i]);
+		//std::cout << area << std::endl;
+		if (area > max_area) {
+			large_contour = contours[i];
+			max_area = area;
+			largest_index = i;
+
+		}
+	}
+	if (max_area == 0) return false;
+	
+	// simplify large contours
+	cv::approxPolyDP(cv::Mat(large_contour), large_contour, 5, true);
     // convex hull
+	std::vector<cv::Point> convex_hull;
     cv::convexHull(large_contour, convex_hull, false);
     if (convex_hull.size() != 4) return false;
 
