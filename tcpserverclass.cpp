@@ -41,7 +41,7 @@ void tcpServerClass::run(){
 
 //    cv::Rect roi_color_detectx(cv::Point(200,190),cv::Point(300,220));
 //    cv::Rect roi_plate_detectx(cv::Point(60, 230),cv::Point(350, 450));
-        cv::Rect roi_color_detectx(cv::Point(250,100),cv::Point(370,170));
+        cv::Rect roi_color_detectx(cv::Point(250,120),cv::Point(370,190));
         cv::Rect roi_plate_detectx(cv::Point(100, 180),cv::Point(450, 450));
     WORD version;
     WSADATA wsaData;

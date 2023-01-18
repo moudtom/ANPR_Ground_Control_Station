@@ -203,9 +203,9 @@ public:
     bool bYoloThread = false;
     bool capturePlate = false;
     cv::Mat  frameSend;
-    int myThroshold_value1 = 180;
+    int myThroshold_value1 = 200;
     int myThroshold_value2 = 180;
-    double alpha = 2.5;
+    double alpha = 10;
     std::vector<ananColor> myColorList;
     std::vector<Car> myBlacklist;
     int car_BlackList_index = -1;
@@ -259,7 +259,7 @@ private:
     QTextEdit *editor;
     QString outputText;
     // palte size
-    int plate_w  = 250 ;
+    int plate_w  = 226 ;
     int plate_h  = 100 ;
 
 

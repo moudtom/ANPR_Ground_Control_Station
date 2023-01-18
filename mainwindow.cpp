@@ -114,6 +114,7 @@ void MainWindow::detectCarColor(cv::Mat inputImg)
     int _vs = (int)myCar.colorHSV.val[1];
     int _vv = (int)myCar.colorHSV.val[2];
     //qDebug()<<myColorList.size();
+    //qDebug()<< _vh << "," << _vs << "," <<_vv;
 
     for (int i = 1; i < myColorList.size(); i++) {
 
@@ -194,8 +195,8 @@ void MainWindow::saveCarData(Car _t_car)
     QString plateNumber1 = QString("%1").arg(_t_car.str_plat1.c_str());
     QStringList items = plateNumber1.split("\n");
 
-    QString plateNumber2 = QString("%1").arg(_t_car.str_plat2.c_str());
-    QStringList items2 = plateNumber2.split("\n");
+    QString plateNumber2 = QString("%1").arg(_t_car.str_plat1.c_str());
+    QStringList items2 = plateNumber2.split("\n\n");
 
     QString plateNumber3 = QString("%1").arg(_t_car.str_plat3.c_str());
     QStringList items3 = plateNumber3.split("\n");
@@ -211,8 +212,7 @@ void MainWindow::saveCarData(Car _t_car)
                << _t_car.str_brand.c_str() << ","
                << _t_car.str_color.c_str() << ","
                << items.at(0).toStdString().c_str() << ","
-               << items2.at(0).toStdString().c_str()  << ","
-               << items3.at(0).toStdString().c_str() <<"\n";
+               << items2.at(0).toStdString().c_str()  << "\n,";
             //out << editor->toPlainText() << "\n";
         }
     }
@@ -226,11 +226,13 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 
     cv::Mat gray, output_canny;
     //double alpha = 2.5; /*< Simple contrast control */
-    int beta = -200;       /*< Simple brightness control */
-    src.convertTo(src, -1, alpha, beta);
+    int beta = -1500;       /*< Simple brightness control */
+    //src.convertTo(src, -1, alpha, beta);
 
     //qDebug()<<"1";
-    cv::cvtColor(src, gray, cv::COLOR_RGB2GRAY);
+    cv::Mat imgBlur;
+    cv::blur(src,imgBlur, cv::Size(3,3));
+    cv::cvtColor(imgBlur, gray, cv::COLOR_RGB2GRAY);
     cv::threshold(gray, gray, myThroshold_value1, 255, cv::THRESH_BINARY);
 	
  	cv::Mat im_floodfill = gray.clone();
@@ -243,7 +245,7 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 	// Combine the two images to get the foreground.
 	cv::Mat im_out =  (gray | im_floodfill_inv);
 	
-	
+    //cv::imshow("im_out",im_out);
     cv::cvtColor(im_out, gray, cv::COLOR_GRAY2RGB);
 	
     int Canny_Throshold = 100;
@@ -282,10 +284,10 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 	// Create a vector to store lines of the image
 	std::vector<Vec4i> lines;
 	// Apply Hough Transform
-	HoughLinesP(tempContours, lines, 1, CV_PI / 180, 150, 50, 10);
+    HoughLinesP(tempContours, lines, 1, CV_PI / 180, 120, 100, 50);
 	// Draw lines on the image
 	cv::Mat tempLine(src.size(), CV_8UC1, cv::Scalar(0));
-	std::cout << "line found " << lines.size() << std::endl;
+    //std::cout << "line found " << lines.size() << std::endl;
 
 	if (lines.size() < 2) return false;
 
@@ -305,7 +307,7 @@ bool MainWindow::find_large_contour1(cv::Mat &src, std::vector<cv::Point> &outpu
 	
 	contours.clear();
 	hierarchy.clear();
-	cv::findContours(tempLine, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+    cv::findContours(tempLine, contours, hierarchy, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 	
 	if (contours.size() == 0) return false;
 
@@ -451,9 +453,9 @@ cv::Mat MainWindow::detectTextAreas(QImage &image, std::vector<cv::Rect> &areas)
         cv::RotatedRect& box = boxes[indices[i]];
         cv::Rect area = box.boundingRect();
         area.x *= ratio.x;
-        area.width *= ratio.x*1.2;
+        area.width *= ratio.x*1.1;
         area.y *= ratio.y;
-        area.height *= ratio.y*1.3;
+        area.height *= ratio.y*1.1;
         areas.push_back(area);
         cv::rectangle(frame, area, green, 1);
         QString index = QString("%1").arg(i);
@@ -647,7 +649,7 @@ std::vector<MainWindow::Car> MainWindow::load_backlist()
 
 void MainWindow::RunGui()
 {
-    cv::Rect roi_color_detect(cv::Point(250,100),cv::Point(370,170));
+    cv::Rect roi_color_detect(cv::Point(250,120),cv::Point(370,190));
     cv::Rect roi_plate_detect(cv::Point(100, 180),cv::Point(450, 450));
 
     //        cv::Rect roi_color_detect(cv::Point(200,190),cv::Point(300,220));
@@ -668,13 +670,13 @@ void MainWindow::RunGui()
             bbox_t _tembBox = result_vec[k];
             cv::Scalar color(0, 255, 255);
 
-            //            cv::rectangle(temp, cv::Rect(_tembBox.x-5, _tembBox.y-10, _tembBox.w+20, _tembBox.h+10), color, 1);
-            //            putText(temp,
-            //                    obj_names[_tembBox.obj_id],
-            //                    cv::Point2f(_tembBox.x + 5, _tembBox.y - 5),
-            //                    cv::FONT_HERSHEY_COMPLEX_SMALL,
-            //                    0.6,
-            //                    color);
+                        cv::rectangle(temp, cv::Rect(_tembBox.x-5, _tembBox.y-10, _tembBox.w+20, _tembBox.h+10), color, 1);
+                        putText(temp,
+                                obj_names[_tembBox.obj_id],
+                                cv::Point2f(_tembBox.x + 5, _tembBox.y - 5),
+                                cv::FONT_HERSHEY_COMPLEX_SMALL,
+                                0.6,
+                                color);
 
             if (_tembBox.obj_id == 0) //0 plate number
             {
@@ -687,7 +689,7 @@ void MainWindow::RunGui()
 
                 //qDebug()<<"pp1="<<_pp1.x<<","<<_pp1.y<<"pp2="<<_pp2.x<<","<<_pp2.y;
 
-                if (_pp1.inside(roi_plate_detect) && _pp2.inside(roi_plate_detect))
+                if (_pp1.inside(roi_plate_detect) && _pp2.inside(roi_plate_detect) && _tembBox.w >=50)
                 {
                     //cv::imshow("ccc",temp(roi_color_detect).clone());
                     CountTime++;
@@ -730,9 +732,6 @@ void MainWindow::RunGui()
                                     3,
                                     myFrame.imgPlate.step);
 
-                        //std::string tText = std::string(TBapi->GetUTF8Text());
-                        //qDebug()<<tText.c_str();
-                        //myCar.str_plat1 = tText;
 
                         QImage imgPlate2(
                                     myFrame.imgPlate.data,
@@ -741,7 +740,7 @@ void MainWindow::RunGui()
                                     myFrame.imgPlate.step,
                                     QImage::Format_RGB888);
 
-                        std::vector<cv::Rect> areas;
+                        /*std::vector<cv::Rect> areas;
                         cv::Mat newImage = detectTextAreas(imgPlate2, areas);
                         //cv::imshow("crop",newImage);
                         QImage framePlate2(
@@ -750,8 +749,8 @@ void MainWindow::RunGui()
                                     newImage.rows,
                                     newImage.step,
                                     QImage::Format_RGB888);
-                        QPixmap imagePlate = QPixmap::fromImage(framePlate2);
-                        ui->ShowImage_Plate_2->setPixmap(imagePlate);
+                        QPixmap imagePlate = QPixmap::fromImage(imgPlate2);
+                        ui->ShowImage_Plate_2->setPixmap(imagePlate)*/;
 
                         //qDebug()<< " detectCarPlateXXX";
                         if(CountTime > 10){
@@ -761,6 +760,10 @@ void MainWindow::RunGui()
                                 takePhoto(temp);
                             }
 
+                            std::string tText = std::string(TBapi->GetUTF8Text());
+                            qDebug()<<tText.c_str();
+                            myCar.str_plat1 = tText;
+
                             //ui->plainTextEdit->setPlainText("");
                             int min = 100;
                             int max = 0;
@@ -768,43 +771,43 @@ void MainWindow::RunGui()
                             int i_number = 0;
                             int i_char = 0;
 
-                            for(int i = 0; i<areas.size();i++){
-                                if(areas[i].y > max){
-                                    max = areas[i].y;
-                                    //province
-                                    i_province = i;
-                                }
+//                            for(int i = 0; i<areas.size();i++){
+//                                if(areas[i].y > max){
+//                                    max = areas[i].y;
+//                                    //province
+//                                    i_province = i;
+//                                }
 
-                                if(areas[i].x < min){
-                                    min = areas[i].x;
-                                    //plate charactor
-                                    i_char = i;
-                                }
-                            }
+//                                if(areas[i].x < min){
+//                                    min = areas[i].x;
+//                                    //plate charactor
+//                                    i_char = i;
+//                                }
+//                            }
 
-                            i_number = 3 - i_province - i_char;
+//                            i_number = 3 - i_province - i_char;
 
-                            TBapi->SetRectangle(areas[i_char].x, areas[i_char].y, areas[i_char].width, areas[i_char].height);
-                            char *outText1 = TBapi->GetUTF8Text();
-                            //myCar.str_plat1 = std::string(outText);
-                            if(sizeof(outText1)/sizeof(char) > 1) myCar.str_plat1 = std::string(outText1);
-                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat1.c_str());
-                            qDebug()<<outText1;
-                            delete [] outText1;
+//                            TBapi->SetRectangle(areas[i_char].x, areas[i_char].y, areas[i_char].width, areas[i_char].height);
+//                            char *outText1 = TBapi->GetUTF8Text();
+//                            //myCar.str_plat1 = std::string(outText);
+//                            if(sizeof(outText1)/sizeof(char) > 1) myCar.str_plat1 = std::string(outText1);
+//                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat1.c_str());
+//                            qDebug()<<outText1;
+//                            delete [] outText1;
 
-                            TBapi->SetRectangle(areas[i_number].x, areas[i_number].y, areas[i_number].width, areas[i_number].height);
-                            char *outText2 = TBapi->GetUTF8Text();
-                            if(sizeof(outText2)/sizeof(char) > 1) myCar.str_plat2 =  std::string(outText2);
-                            //myCar.str_plat1 = std::string(outText);
-                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat2.c_str());
-                            delete [] outText2;
+//                            TBapi->SetRectangle(areas[i_number].x, areas[i_number].y, areas[i_number].width, areas[i_number].height);
+//                            char *outText2 = TBapi->GetUTF8Text();
+//                            if(sizeof(outText2)/sizeof(char) > 1) myCar.str_plat2 =  std::string(outText2);
+//                            //myCar.str_plat1 = std::string(outText);
+//                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat2.c_str());
+//                            delete [] outText2;
 
-                            TBapi->SetRectangle(areas[i_province].x, areas[i_province].y, areas[i_province].width, areas[i_province].height);
-                            char *outText3 = TBapi->GetUTF8Text();
-                            if(sizeof(outText3)/sizeof(char) > 1) myCar.str_plat3 = std::string(outText3);
-                            //myCar.str_plat1 = std::string(outText);
-                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat3.c_str());
-                            delete [] outText3;
+//                            TBapi->SetRectangle(areas[i_province].x, areas[i_province].y, areas[i_province].width, areas[i_province].height);
+//                            char *outText3 = TBapi->GetUTF8Text();
+//                            if(sizeof(outText3)/sizeof(char) > 1) myCar.str_plat3 = std::string(outText3);
+//                            //myCar.str_plat1 = std::string(outText);
+//                            //ui->plainTextEdit->setPlainText(ui->plainTextEdit->toPlainText()+myCar.str_plat3.c_str());
+//                            delete [] outText3;
 
                             saveCarData(myCar);
 
@@ -892,21 +895,19 @@ void MainWindow::RunGui()
         //qDebug()<<items;
         ui->PlateNumber->setText(items.at(0));
 
-        //QString plateNumber = QString("%1").arg(myCar.str_plat1.c_str());
-        QString plateNumber2 = QString("%1").arg(myCar.str_plat2.c_str());
-        QStringList items3 = plateNumber2.split("\n,");
-        //qDebug()<<items;
-        ui->PlateNumber2->setText(items3.at(0));
-
-
+//        //QString plateNumber = QString("%1").arg(myCar.str_plat1.c_str());
+//        QString plateNumber2 = QString("%1").arg(myCar.str_plat1.c_str());
+//        QStringList items3 = plateNumber2.split("\n,");
+//        //qDebug()<<items;
+//        ui->PlateNumber2->setText(items3.at(0));
 
         // Display Province
-        QString province = QString("%1").arg(myCar.str_plat3.c_str());
+        QString province = QString("%1").arg(myCar.str_plat1.c_str());
         QStringList items2 = plateNumber.split("\n\n");
-        ui->PlateNumber_Province->setText(province);
-        //        for(const QString& item: items2) {
-        //            ui->PlateNumber_Province->setText(item);
-        //        }
+        //ui->PlateNumber_Province->setText(items2.at(0));
+               for(const QString& item: items2) {
+                    ui->PlateNumber_Province->setText(item);
+               }
 
         cvtColor(temp, temp, cv::COLOR_BGR2RGB);
         QImage frame(
