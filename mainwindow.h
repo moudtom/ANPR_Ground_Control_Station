@@ -39,7 +39,7 @@ public:
     tcpServerClass _server54000;
     std::string names_file = "C:/darknet-master/data/obj.names";
     std::string cfg_file = "C:/darknet-master/cfg/yolo-obj.cfg";
-    std::string weights_file = "C:/darknet-master/yolo-obj-plate_final.weights";
+    std::string weights_file = "C:/darknet-master/yolo-ob-platej_last.weights";
     std::string saveDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/save history";
     std::string loadCarBlackListDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/blacklist_data.csv";
     std::string loadColorListDirectory = "C:/Users/moudp/Documents/ANPR_Ground_Control_Station_V2_1/color_data.csv";
@@ -227,6 +227,7 @@ public slots:
 
     void decode(const cv::Mat& scores, const cv::Mat& geometry, float scoreThresh,
         std::vector<cv::RotatedRect>& detections, std::vector<float>& confidences);
+    void decodeBrand( int idBrand);
 private slots:
     void appendSavedPhoto(QString name);
     void takePhoto(cv::Mat &frame);

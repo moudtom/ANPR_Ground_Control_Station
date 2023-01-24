@@ -518,6 +518,65 @@ void MainWindow::decode(const cv::Mat& scores, const cv::Mat& geometry, float sc
     }
 }
 
+void MainWindow::decodeBrand(int idBrand)
+{
+    // Car Brand
+    qDebug()<<idBrand;
+    switch (idBrand) {
+    case 1:
+        ui->brand->setText("NISSAN");
+        myCar.str_brand = "NISSAN";
+        break;
+    case 2:
+        ui->brand->setText("MITSUBISHI");
+        myCar.str_brand = "MITSUBISHI";
+        break;
+    case 3:
+        ui->brand->setText("ISUZU");
+        myCar.str_brand = "ISUZU";
+        break;
+    case 4:
+        ui->brand->setText("MAZDA");
+        myCar.str_brand = "MAZDA";
+        break;
+    case 5:
+        ui->brand->setText("CHEVROLET");
+        myCar.str_brand = "CHEVROLET";
+        break;
+    case 6:
+        ui->brand->setText("MG");
+        myCar.str_brand = "MG";
+        break;
+    case 7:
+        ui->brand->setText("FORD");
+        myCar.str_brand = "FORD";
+        break;
+    case 8:
+        ui->brand->setText("BMW");
+        myCar.str_brand = "BMW";
+        break;
+    case 9:
+        ui->brand->setText("Mercedes-Benz");
+        myCar.str_brand = "Mercedes-Benz";
+        break;
+    case 10:
+        ui->brand->setText("SUZUKI");
+        myCar.str_brand = "SUZUKI";
+        break;
+    case 11:
+        ui->brand->setText("HONDA");
+        myCar.str_brand = "HONDA";
+        break;
+    case 12:
+        ui->brand->setText("TOYOTA");
+        myCar.str_brand = "TOYOTA";
+        break;
+    default:
+        ui->brand->setText("N/A");
+        myCar.str_brand = "N/A";
+    }
+}
+
 void MainWindow::appendSavedPhoto(QString name)
 {
     QString photo_path = Utilities::getPhotoPath(name, "jpg");
@@ -748,9 +807,9 @@ void MainWindow::RunGui()
                                     newImage.cols,
                                     newImage.rows,
                                     newImage.step,
-                                    QImage::Format_RGB888);
+                                    QImage::Format_RGB888);*/
                         QPixmap imagePlate = QPixmap::fromImage(imgPlate2);
-                        ui->ShowImage_Plate_2->setPixmap(imagePlate)*/;
+                        ui->ShowImage_Plate_2->setPixmap(imagePlate);
 
                         //qDebug()<< " detectCarPlateXXX";
                         if(CountTime > 10){
@@ -765,11 +824,11 @@ void MainWindow::RunGui()
                             myCar.str_plat1 = tText;
 
                             //ui->plainTextEdit->setPlainText("");
-                            int min = 100;
-                            int max = 0;
-                            int i_province = 0;
-                            int i_number = 0;
-                            int i_char = 0;
+//                            int min = 100;
+//                            int max = 0;
+//                            int i_province = 0;
+//                            int i_number = 0;
+//                            int i_char = 0;
 
 //                            for(int i = 0; i<areas.size();i++){
 //                                if(areas[i].y > max){
@@ -818,6 +877,8 @@ void MainWindow::RunGui()
                         //qDebug()<<myCar.str_plat1.c_str();
 
 
+
+
                         //Black list
                         car_BlackList_index = -1;
                         for (int i = 0; i < myBlacklist.size(); i++) {
@@ -843,6 +904,7 @@ void MainWindow::RunGui()
 
             } else {
                 //qDebug()<< _tembBox.obj_id;
+
                 myCar.Px = _tembBox.x + _tembBox.w / 2;
                 myCar.Py = _tembBox.y + _tembBox.h / 2;
 
@@ -866,21 +928,9 @@ void MainWindow::RunGui()
                     QPixmap imageBland = QPixmap::fromImage(frameBland);
                     ui->ShowImage_Bland->setPixmap(imageBland);
                     //qDebug()<< _tembBox.obj_id;
+                    decodeBrand(_tembBox.obj_id);
 
-                    // Car Brand
-                    switch (_tembBox.obj_id) {
-                    case 1:
-                        ui->brand->setText("HONDA");
-                        myCar.str_brand = "HONDA";
-                        break;
-                    case 2:
-                        ui->brand->setText("TOYOTA");
-                        myCar.str_brand = "TOYOTA";
-                        break;
-                    default:
-                        ui->brand->setText("N/A");
-                        myCar.str_brand = "N/A";
-                    }
+
 
                 }
 
